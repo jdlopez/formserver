@@ -35,11 +35,11 @@ public class TestConfig {
         Properties p = new Properties();
         p.load(new FileInputStream(new File(System.getProperty("user.home"), "formserver.properties")));
         DbConfiguration cfg = new DbConfiguration();
-        cfg.setDatabase(p.getProperty("database"));
-        cfg.setUserName(p.getProperty("userName"));
-        cfg.setServerHost(p.getProperty("serverHost"));
-        cfg.setServerPort(Integer.parseInt(p.getProperty("serverPort")));
-        cfg.setPassword(p.getProperty("password").toCharArray());
+        cfg.setDatabase(p.getProperty("mongodb.database"));
+        cfg.setUserName(p.getProperty("mongodb.userName"));
+        cfg.setServerHost(p.getProperty("mongodb.serverHost"));
+        cfg.setServerPort(Integer.parseInt(p.getProperty("mongodb.serverPort")));
+        cfg.setPassword(p.getProperty("mongodb.password"));
         cfg.store();
 
     }

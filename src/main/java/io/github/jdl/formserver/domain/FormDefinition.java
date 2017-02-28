@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class FormDefinition {
     private Long id;
+    private String name;
     private String definition;
     private String type;
     private Date created;
@@ -19,6 +20,14 @@ public class FormDefinition {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDefinition() {

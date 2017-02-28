@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @Component
 public class DbConfiguration {
     private String userName;
-    private char[] password;
+    private String password;
     private String database;
     private String serverHost;
     private int serverPort;
@@ -32,7 +32,7 @@ public class DbConfiguration {
         try {
             Entity configEnt = datastore.get(configKey);
             userName = safeString(configEnt.getProperty("userName"));
-            password = safeString(configEnt.getProperty("password"), "").toCharArray();
+            password = safeString(configEnt.getProperty("password"));
             database = safeString(configEnt.getProperty("database"));
             serverHost = safeString(configEnt.getProperty("serverHost"));
             serverPort = Integer.parseInt(safeString(configEnt.getProperty("serverPort"), "0"));
@@ -44,7 +44,7 @@ public class DbConfiguration {
             setUserName(p.getProperty("mongodb.userName"));
             setServerHost(p.getProperty("mongodb.serverHost"));
             setServerPort(Integer.parseInt(p.getProperty("mongodb.serverPort")));
-            setPassword(p.getProperty("mongodb.password").toCharArray());
+            setPassword(p.getProperty("mongodb.password"));
             store();
         }
     }
@@ -64,7 +64,7 @@ public class DbConfiguration {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Entity configEnt = new Entity("AppConfig", "formServer");
         configEnt.setProperty("userName", userName);
-        configEnt.setProperty("password", password.toString());
+        configEnt.setProperty("password", password);
         configEnt.setProperty("database", database);
         configEnt.setProperty("serverHost", serverHost);
         configEnt.setProperty("serverPort", serverPort);
@@ -79,11 +79,11 @@ public class DbConfiguration {
         this.userName = userName;
     }
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(char[] password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

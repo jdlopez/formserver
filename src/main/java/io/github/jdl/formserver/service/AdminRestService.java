@@ -25,7 +25,7 @@ public class AdminRestService {
                            @RequestParam("serverHost") String serverHost, @RequestParam("serverPort") int serverPort,
                            @RequestParam("userName") String userName) {
         dbConfiguration.setDatabase(database);
-        dbConfiguration.setPassword(password.toCharArray());
+        dbConfiguration.setPassword(password);
         dbConfiguration.setServerHost(serverHost);
         dbConfiguration.setServerPort(serverPort);
         dbConfiguration.setUserName(userName);

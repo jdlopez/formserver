@@ -16,6 +16,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -28,9 +30,15 @@ import java.util.logging.Logger;
 @EnableWebMvc
 @EnableMongoRepositories(basePackageClasses = {FormDefinitionRepoMongo.class, FormInstanceRepoMongo.class})
 @ComponentScan(basePackages={"io.github.jdl"})
-public class AppConfig implements ApplicationListener<ContextRefreshedEvent> {
+public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger log = Logger.getLogger(AppConfig.class.getName());
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**.html", "/**.js", "/**.css")
+                .addResourceLocations("/");
+    }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -50,7 +58,7 @@ public class AppConfig implements ApplicationListener<ContextRefreshedEvent> {
     public MongoDbFactory mongoDbFactory() throws UnknownHostException, EntityNotFoundException {
         DbConfiguration cfg = dbConfiguration();
         if (cfg != null) {
-            MongoCredential credential = MongoCredential.createCredential(cfg.getUserName(), cfg.getDatabase(), cfg.getPassword());
+            MongoCredential credential = MongoCredential.createCredential(cfg.getUserName(), cfg.getDatabase(), cfg.getPassword().toCharArray());
             MongoClient mongoClient = new MongoClient(new ServerAddress(cfg.getServerHost(), cfg.getServerPort()), Arrays.asList(credential));
             MongoDbFactory ret = new SimpleMongoDbFactory(mongoClient, cfg.getDatabase());
             log.info("Creando conexion a la bbdd : " + ret);
