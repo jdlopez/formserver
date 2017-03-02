@@ -128,62 +128,54 @@
 <script type="text/javascript">
     $( document ).ready(function() {
         //"title": "Definición de Formulario",
-        var alpacaForm = $("#formFormulario").alpaca({
+        $("#formFormulario").alpaca({
             "schema": {
 
                 "type": "object",
+
                 "properties": {
                     "name": {
                         "type": "string",
+                        "required": true,
                         "title": "Nombre"
                     },
                     "type": {
                         "type": "string",
                         "title": "Tipo",
+                        "required": true,
                         "enum": ['OnePerUser', 'ManyPerUser']
                     },
-                    "active": {
-                        "type": "boolean",
-                        "title": "Activo"
+                    "definition": {
+                        "type": "string",
+                        "required": true,
+                        "title": "Definición"
+                    },
+                    "active":{
+                        "title": "Activo",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                }
+            },
+            "options": {
+                "form": {
+                    "buttons": {
+                        "submit": {}
                     }
                 },
-                "options": {
-                    "form":{
-                        "attributes":{
-                            "action":"http://httpbin.org/post",
-                            "method":"post"
-                        },
-                        "buttons":{
-                            "submit":{
-                                "title": "Send Form Data",
-                                "click": function() {
-                                    var val = this.getValue();
-                                    if (this.isValid(true)) {
-                                        alert("Valid value: " + JSON.stringify(val, null, "  "));
-                                        this.ajaxSubmit().done(function() {
-                                            alert("Posted!");
-                                        });
-                                    } else {
-                                        alert("Invalid value: " + JSON.stringify(val, null, "  "));
-                                    }
-                                }
-                            }
-                        }
+                "fields": {
+                    "type": {
+                        "removeDefaultNone": true
+                    },
+                    "definition": {
+                        "type": "textarea",
+                        "helper": "Formato JSON del formulario. Consulte alpacajs",
+                        "rows": 6,
+                        "cols": 80
                     }
-                },
-                "view" : "bootstrap-edit"
-            }
-        });
-        $("#btnSaveForm").click(function(){
-            var val = alpacaForm.getValue();
-            if (alpacaForm.isValid(true)) {
-                alert("Valid value: " + JSON.stringify(val, null, "  "));
-                alpacaForm.ajaxSubmit().done(function() {
-                    alert("Posted!");
-                });
-            } else {
-                alert("Invalid value: " + JSON.stringify(val, null, "  "));
-            }
+                }
+            },
+            "view": "bootstrap-create"
         });
     });
 
