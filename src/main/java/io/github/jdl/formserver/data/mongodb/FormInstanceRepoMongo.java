@@ -8,6 +8,6 @@ import java.util.List;
 /**
  * Created by ddjlo on 27/02/2017.
  */
-public interface FormInstanceRepoMongo extends MongoRepository<FormInstance, Long> {
-    List<FormInstance> findByFormIdAndUserId(Long formId, String userId);
+public interface FormInstanceRepoMongo extends MongoRepository<FormInstance, String> {
+    List<FormInstance> findByFormIdAndUserId(String formId, String userId);
 }

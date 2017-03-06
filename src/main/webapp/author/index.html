@@ -70,7 +70,7 @@
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                 </button>
             </p>
-            <table data-toggle="table" data-url="form/list">
+            <table data-toggle="table" data-url="form/list" data-pagination="true" data-single-select="true">
                 <thead>
                 <!--definition-->
                 <tr>
@@ -95,6 +95,7 @@
                     <h4 class="modal-title" id="myModalLabel">Definición de Formulario</h4>
                 </div>
                 <div class="modal-body">
+                    <div id="result" class="alert alert-success" role="alert"></div>
                     <div id="formFormulario"></div>
                 </div>
                 <div class="modal-footer">
@@ -160,9 +161,30 @@
             "options": {
                 "form": {
                     "buttons": {
-                        "submit": {}
+                        "submit": {
+                            "title": "Guardar",
+                            "click": function(e) {
+                                this.refreshValidationState(true);
+                                if (!this.isValid(true)) {
+                                    this.focus();
+                                    return;
+                                }
+                                var value = this.getValue();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "form",
+                                    data: JSON.stringify(value),
+                                    contentType: "application/json"
+                                })
+                                .done(function( data ) {
+                                    $( "#result" ).html( data );
+                                });
+                                return false;
+                            }
+                        }
                     }
                 },
+                "hideInitValidationError": true,
                 "fields": {
                     "type": {
                         "removeDefaultNone": true
@@ -170,7 +192,7 @@
                     "definition": {
                         "type": "textarea",
                         "helper": "Formato JSON del formulario. Consulte alpacajs",
-                        "rows": 6,
+                        "rows": 16,
                         "cols": 80
                     }
                 }

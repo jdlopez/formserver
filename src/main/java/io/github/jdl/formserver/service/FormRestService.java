@@ -56,7 +56,7 @@ public class FormRestService {
      * @return
      */
     @RequestMapping(path = "{formId}", method = RequestMethod.GET)
-    public FormDefinition newForm(@PathVariable ("formId") Long formId, HttpServletRequest request) {
+    public FormDefinition newForm(@PathVariable ("formId") String formId, HttpServletRequest request) {
         // comprobar permisos? por tipo?
         return formRepository.findById(formId);
     }

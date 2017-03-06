@@ -43,7 +43,7 @@ public class AuthorRestService {
     }
 
     @RequestMapping(path = "/form/{formId}", method = RequestMethod.GET)
-    public FormDefinition getForm(@PathVariable("formId") Long formId) {
+    public FormDefinition getForm(@PathVariable("formId") String formId) {
         return formRepository.findById(formId);
     }
 }

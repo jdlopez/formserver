@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * No es necesario anotar la clase FormDefinitioin xq:
  * id fits the standard name for a MongoDB id so it doesn’t require any special annotation to tag it for Spring Data MongoDB.
  */
-public interface FormDefinitionRepoMongo extends MongoRepository<FormDefinition, Long> {
+public interface FormDefinitionRepoMongo extends MongoRepository<FormDefinition, String> {
 
 }

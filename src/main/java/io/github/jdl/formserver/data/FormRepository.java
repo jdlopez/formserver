@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface FormRepository {
     
-    FormDefinition findById(Long formId);
+    FormDefinition findById(String  formId);
 
     void save(FormInstance form);
 
@@ -20,7 +20,7 @@ public interface FormRepository {
      * @param id
      * @param form
      */
-    void updateDates(Long id, FormInstance form);
+    void updateDates(String id, FormInstance form);
 
     boolean canSave(FormDefinition formDefinition, User user);
 
@@ -30,5 +30,5 @@ public interface FormRepository {
 
     void saveDefinition(FormDefinition form);
 
-    List<FormInstance> findInstanceByUser(Long formId, String userId);
+    List<FormInstance> findInstanceByUser(String formId, String userId);
 }

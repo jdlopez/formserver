@@ -19,13 +19,13 @@ public class OnePerUser implements FormType {
     private FormRepository formRepository;
 
     @Override
-    public boolean canSave(Long formId, String userId) {
+    public boolean canSave(String formId, String userId) {
         List<FormInstance> forms = formRepository.findInstanceByUser(formId, userId);
         return forms == null || forms.isEmpty();
     }
 
     @Override
-    public boolean canSend(Long formId, String userId) {
+    public boolean canSend(String formId, String userId) {
         List<FormInstance> forms = formRepository.findInstanceByUser(formId, userId);
         if (forms != null && forms.size() == 1)
             return FormInstance.STATE_DRAFT.equals( forms.get(0).getState() );

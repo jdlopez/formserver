@@ -10,8 +10,8 @@ public class FormInstance {
     public static final String STATE_SENT = "SENT";
     public static final String STATE_DRAFT = "DRAFT";
 
-    private Long id;
-    private Long formId;
+    private String id;
+    private String formId;
     private String userId;
     private String lifeCycle;
     private String state = STATE_DRAFT;
@@ -19,19 +19,19 @@ public class FormInstance {
     private Date updated;
     private Object data;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getFormId() {
+    public String getFormId() {
         return formId;
     }
 
-    public void setFormId(Long formId) {
+    public void setFormId(String formId) {
         this.formId = formId;
     }
 

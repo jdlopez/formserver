@@ -26,7 +26,7 @@ public class FormRepositoryServiceMongo implements FormRepository {
     private ApplicationContext applicationContext;
 
     @Override
-    public FormDefinition findById(Long formId) {
+    public FormDefinition findById(String  formId) {
         return formDefinitionRepoMongo.findOne(formId);
     }
 
@@ -36,7 +36,7 @@ public class FormRepositoryServiceMongo implements FormRepository {
     }
 
     @Override
-    public void updateDates(Long id, FormInstance form) {
+    public void updateDates(String id, FormInstance form) {
         FormInstance f = formInstanceRepoMongo.findOne(id);
         form.setCreated(f.getCreated());
         form.setUpdated(new Date());
@@ -67,7 +67,7 @@ public class FormRepositoryServiceMongo implements FormRepository {
     }
 
     @Override
-    public List<FormInstance> findInstanceByUser(Long formId, String userId) {
+    public List<FormInstance> findInstanceByUser(String  formId, String userId) {
         return formInstanceRepoMongo.findByFormIdAndUserId(formId, userId);
     }
 }

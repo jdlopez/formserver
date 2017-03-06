@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Qualifier("ManyPerUser")
 public class ManyPerUser implements FormType {
     @Override
-    public boolean canSave(Long formId, String userId) {
+    public boolean canSave(String formId, String userId) {
         return true;
     }
 
     @Override
-    public boolean canSend(Long formId, String userId) {
+    public boolean canSend(String formId, String userId) {
         return true;
     }
 }

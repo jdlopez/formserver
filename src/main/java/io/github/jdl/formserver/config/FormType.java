@@ -5,6 +5,6 @@ package io.github.jdl.formserver.config;
  */
 public interface FormType {
 
-    public boolean canSave(Long formId, String userId);
-    public boolean canSend(Long formId, String userId);
+    public boolean canSave(String formId, String userId);
+    public boolean canSend(String formId, String userId);
 }

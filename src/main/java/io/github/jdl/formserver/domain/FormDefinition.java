@@ -1,12 +1,15 @@
 package io.github.jdl.formserver.domain;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 import java.util.Date;
 
 /**
  * Created by ddjlo on 27/02/2017.
  */
 public class FormDefinition {
-    private Long id;
+    private String id;
+    @Indexed(unique = true)
     private String name;
     private String definition;
     private String type;
@@ -14,11 +17,11 @@ public class FormDefinition {
     private String owner;
     private boolean active = false;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
