@@ -29,8 +29,10 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- bootstrap-table -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+    <!-- bootstrap-table
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+    -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
     <!-- alpaca -->
     <link type="text/css" href="//code.cloudcms.com/alpaca/1.5.22/bootstrap/alpaca.min.css" rel="stylesheet"/>
 
@@ -70,7 +72,7 @@
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                 </button>
             </p>
-            <table data-toggle="table" data-url="form/list" data-pagination="true" data-single-select="true">
+            <table id="formsTable" class="table table-striped table-bordered">
                 <thead>
                 <!--definition-->
                 <tr>
@@ -80,6 +82,7 @@
                     <th data-field="created">Fecha creación</th>
                     <th data-field="owner">Creador</th>
                     <th data-field="active">Activo</th>
+                    <th data-field="active">Acciones</th>
                 </tr>
                 </thead>
             </table>
@@ -117,17 +120,52 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../js/ie10-viewport-bug-workaround.js"></script>
 
-<!-- bootstrap-table -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<!-- datatable -->
+<script type="text/javascript" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
 
-<!-- Locales bootstrap-table -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-es-ES.min.js"></script>
 <!-- alpaca -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 <script type="text/javascript" src="//code.cloudcms.com/alpaca/1.5.22/bootstrap/alpaca.min.js"></script>
 
+<!-- moment -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+
 <script type="text/javascript">
     $( document ).ready(function() {
+        $('#formsTable').dataTable( {
+            "ajax": {
+                "url": "form/list",
+                "dataSrc": ""
+            },
+            columns: [
+                { data: 'id' },
+                { data: 'name' },
+                { data: 'type' },
+                {
+                    data: 'created',
+                    render: function ( data, type, row ) {
+                        return moment(data).format("DD/MM/YYYY HH:mm");
+                    }
+                },
+                { data: 'owner' },
+                { data: 'active' },
+                {
+                    data: 'id',
+                    orderable: false,
+                    render: function ( data, type, row ) {
+                        return '<div class="btn-group" role="group" aria-label="...">'+
+                            '<button type="button" class="btn btn-default">A</button>'+
+                            '<button type="button" class="btn btn-default">B</button>'+
+                            '<button type="button" class="btn btn-default">C</button>'+
+                            '</div>';
+                    }
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+            }
+        } );
         //"title": "Definición de Formulario",
         $("#formFormulario").alpaca({
             "schema": {
