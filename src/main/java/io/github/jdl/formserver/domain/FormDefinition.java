@@ -1,21 +1,23 @@
 package io.github.jdl.formserver.domain;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ddjlo on 27/02/2017.
  */
 public class FormDefinition {
     private String id;
-    @Indexed(unique = true)
     private String name;
-    private String definition;
-    private String type;
-    private Date created;
-    private String owner;
-    private boolean active = false;
+    private String description;
+    private boolean scopePrivate = true;
+    private EnumInstance instance;
+    private StorageType storage;
+    private String authentication = "none";
+    private List<String> authorization; // role List
+    private boolean auditing;
+    private String lifecyle; // none ... x ahora
+    private boolean draft = true;
+    private AuditData auditData;
 
     public String getId() {
         return id;
@@ -33,43 +35,83 @@ public class FormDefinition {
         this.name = name;
     }
 
-    public String getDefinition() {
-        return definition;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDefinition(String definition) {
-        this.definition = definition;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getType() {
-        return type;
+    public boolean isScopePrivate() {
+        return scopePrivate;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setScopePrivate(boolean scopePrivate) {
+        this.scopePrivate = scopePrivate;
     }
 
-    public Date getCreated() {
-        return created;
+    public EnumInstance getInstance() {
+        return instance;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setInstance(EnumInstance instance) {
+        this.instance = instance;
     }
 
-    public String getOwner() {
-        return owner;
+    public StorageType getStorage() {
+        return storage;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setStorage(StorageType storage) {
+        this.storage = storage;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getAuthentication() {
+        return authentication;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setAuthentication(String authentication) {
+        this.authentication = authentication;
+    }
+
+    public List<String> getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(List<String> authorization) {
+        this.authorization = authorization;
+    }
+
+    public boolean isAuditing() {
+        return auditing;
+    }
+
+    public void setAuditing(boolean auditing) {
+        this.auditing = auditing;
+    }
+
+    public String getLifecyle() {
+        return lifecyle;
+    }
+
+    public void setLifecyle(String lifecyle) {
+        this.lifecyle = lifecyle;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
+    }
+
+    public AuditData getAuditData() {
+        return auditData;
+    }
+
+    public void setAuditData(AuditData auditData) {
+        this.auditData = auditData;
     }
 }
