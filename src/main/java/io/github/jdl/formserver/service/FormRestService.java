@@ -3,8 +3,8 @@ package io.github.jdl.formserver.service;
 import io.github.jdl.formserver.data.FormRepository;
 import io.github.jdl.formserver.data.UserRepository;
 import io.github.jdl.formserver.domain.FormDefinition;
-import io.github.jdl.formserver.domain.FormInstance;
 import io.github.jdl.formserver.domain.User;
+import io.github.jdl.formserver.exceptions.FormSecurityException;
 import io.github.jdl.formserver.exceptions.FormServerException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +12,18 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
+import java.security.Principal;
 
 /**
  * Created by ddjlo on 27/02/2017.
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 public class FormRestService {
 
     @Autowired
@@ -48,59 +45,27 @@ public class FormRestService {
         return messages.getMessage("error.BeansException", new Object[]{ e.getMessage()}, request.getLocale());
     }
 
-
-    /**
-     *
-     * @param formId
-     * @param request
-     * @return
+    /*
+- [ ] /api/<id> GET get schema
+- [ ] /api/<id> POST save form instance
+- [ ] /api/<id>/data GET get a list of all form instances of given type
+- [ ] /api/<id>/headers GET form def headers (suitable for datatables)
+- [ ] /api/forms GET list available formdefinitions {name, description, id, public? }
      */
-    @RequestMapping(path = "{formId}", method = RequestMethod.GET)
-    public FormDefinition newForm(@PathVariable ("formId") String formId, HttpServletRequest request) {
-        // comprobar permisos? por tipo?
-        return formRepository.findById(formId);
+
+    public FormDefinition getForm(@PathVariable("id") String id, Principal principal) throws FormSecurityException {
+
+        FormDefinition form = formRepository.findById(id);
+        User user = userRepository.findByName(principal.getName());
+        if (checkSecurity(form, user))
+            return form;
+        else
+            throw new FormSecurityException(form, user);
     }
 
-    @RequestMapping(path = "{formId}", method = RequestMethod.POST)
-    public FormInstance saveForm(@RequestBody FormInstance form, HttpServletRequest request) throws FormServerException {
-        User user = userRepository.findByRequest(request);
-        FormDefinition fDef = formRepository.findById(form.getFormId());
-        if (formRepository.canSave(fDef, user)) {
-            form.setUserId(user.getId());
-            if (form.getId() == null) // new form instance!
-                form.setCreated(new Date());
-            else {
-                formRepository.updateDates(form.getId(), form);
-            }
-
-            formRepository.save(form);
-        } else {
-            throw new FormServerException("No se puede guardar");
-        }
-        return form;
+    private boolean checkSecurity(FormDefinition form, User user) {
+        return !form.isScopePrivate() ||
+                (user != null && form.getAuthorization() != null
+                        && form.getAuthorization().stream().anyMatch(role -> user.getAuthorization().contains(role)) );
     }
-
-    @RequestMapping(path = "{formId}/send", method = RequestMethod.POST)
-    public FormInstance sendForm(@RequestBody FormInstance form, HttpServletRequest request) throws FormServerException {
-        User user = userRepository.findByRequest(request);
-        FormDefinition fDef = formRepository.findById(form.getFormId());
-        if (formRepository.canSend(fDef, user)) {
-            form.setState(FormInstance.STATE_SENT);
-        } else {
-            throw new FormServerException("No se puede enviar");
-        }
-        return saveForm(form, request);
-    }
-
-    @RequestMapping(path = "/list", method = RequestMethod.GET)
-    public List<FormDefinition> getAuthorizedFormDefinitions(HttpServletRequest request) {
-        User user = userRepository.findByRequest(request);
-        List<FormDefinition> forms = formRepository.findAll();
-        for (FormDefinition f: forms) {
-            if (!formRepository.canSave(f, user))
-                forms.remove(f);
-        }
-        return forms;
-    }
-
 }

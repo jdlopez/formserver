@@ -1,14 +1,23 @@
 package io.github.jdl.formserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import org.bson.Document;
+import org.bson.codecs.pojo.annotations.BsonId;
+
 import java.util.List;
 
 /**
  * Created by ddjlo on 27/02/2017.
  */
 public class FormDefinition {
+    @JsonView(Views.Public.class)
     private String id;
+    @JsonView(Views.Public.class)
     private String name;
+    @JsonView(Views.Public.class)
     private String description;
+    @JsonView(Views.Public.class)
+    private Document metaData; // jsonschema or whatever. BSON -> vinculamos mucho con Mongodb
     private boolean scopePrivate = true;
     private EnumInstance instance;
     private StorageType storage;
@@ -19,10 +28,12 @@ public class FormDefinition {
     private boolean draft = true;
     private AuditData auditData;
 
+    @BsonId
     public String getId() {
         return id;
     }
 
+    @BsonId
     public void setId(String id) {
         this.id = id;
     }
@@ -113,5 +124,32 @@ public class FormDefinition {
 
     public void setAuditData(AuditData auditData) {
         this.auditData = auditData;
+    }
+
+    public Document getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(Document metaData) {
+        this.metaData = metaData;
+    }
+
+    @Override
+    public String toString() {
+        return "FormDefinition{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", metaData=" + metaData +
+                ", scopePrivate=" + scopePrivate +
+                ", instance=" + instance +
+                ", storage=" + storage +
+                ", authentication='" + authentication + '\'' +
+                ", authorization=" + authorization +
+                ", auditing=" + auditing +
+                ", lifecyle='" + lifecyle + '\'' +
+                ", draft=" + draft +
+                ", auditData=" + auditData +
+                '}';
     }
 }

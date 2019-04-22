@@ -1,8 +1,15 @@
 package io.github.jdl.formserver.domain;
 
 public class StorageType {
+
     private String name = "mongodb";
     private String entity;
+
+    public StorageType() {}
+
+    public StorageType(String entity) {
+        this.entity = entity;
+    }
 
     public String getName() {
         return name;

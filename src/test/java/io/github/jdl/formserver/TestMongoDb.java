@@ -1,36 +1,66 @@
 package io.github.jdl.formserver;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import io.github.jdl.formserver.config.AppRunnerConfig;
+import io.github.jdl.formserver.data.FormRepository;
+import io.github.jdl.formserver.domain.EnumInstance;
+import io.github.jdl.formserver.domain.FormDefinition;
+import io.github.jdl.formserver.domain.StorageType;
+import org.bson.Document;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Properties;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 /**
  * Created by ddjlo on 28/02/2017.
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AppRunnerConfig.class)
 public class TestMongoDb {
+
+    @Autowired
+    private FormRepository formRepository;
 
     @Test
     public void testConnection() throws IOException {
-        Properties p = new Properties();
-        // mongodb://<dbuser>:<dbpassword>@host:port/db
-        p.load(new FileInputStream(new File(System.getProperty("user.home"), "formserver.properties")));
-        String userName = p.getProperty("mongodb.userName");
-        String password = p.getProperty("mongodb.password");
-        String host = p.getProperty("mongodb.serverHost");
-        String port = p.getProperty("mongodb.serverPort");
-        String database = p.getProperty("mongodb.database");
-        MongoCredential credential = MongoCredential.createCredential(userName, database, password.toCharArray());
-        MongoClient mongoClient = new MongoClient(new ServerAddress(host, Integer.parseInt(port)), Arrays.asList(credential));
-
-        System.out.println(mongoClient.getDB(database).collectionExists("test"));
+        MongoClient mongoClient = new AppRunnerConfig().databaseClient();
+        // listDatabaseNames: only for admin connections!!
+        //mongoClient.listDatabaseNames().forEach((Consumer<? super String>) s -> System.out.println(s));
+        System.out.println(mongoClient.getDatabase("mytest"));
         mongoClient.close();
 
+    }
+
+    @Test
+    public void testInsertSomeData() throws IOException, URISyntaxException {
+        FormDefinition f1 = new FormDefinition();
+        f1.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+        f1.setAuditing(false);
+        f1.setAuthentication("none");
+        f1.setInstance(EnumInstance.many);
+        f1.setLifecyle("none");
+        f1.setName("testOne");
+        f1.setDescription("This is a test form");
+        //ObjectMapper om = new ObjectMapper();
+        //om.readTree(getClass().getResource("/testOne.json"))
+        // new String(Files.readAllBytes(Paths.get(getClass().getResource("/testOne.json").toURI())))
+        f1.setMetaData(Document.parse(new String(Files.readAllBytes(Paths.get(getClass().getResource("/testOne.json").toURI())))));
+        f1.setStorage(new StorageType("testOne"));
+        formRepository.save(f1);
+        // new id?
+        System.out.println("id? " + f1.getId());
+    }
+
+    @Test
+    public void testListAll() {
+        formRepository.findAll().forEach(f -> System.out.println(f));
     }
 }
